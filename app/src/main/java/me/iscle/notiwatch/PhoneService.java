@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
@@ -13,9 +14,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.UUID;
 
 import androidx.core.app.NotificationCompat;
@@ -66,6 +73,12 @@ public class PhoneService extends Service {
         this.mHandler = mHandler;
     }
 
+    private void handleMessage(String data) {
+        Log.d(TAG, "handleMessage: " + new String(data));
+        Capsule capsule = new Gson().fromJson(data, Capsule.class);
+        Log.d(TAG, "handleMessage: " + capsule.toJSONByteArray());
+    }
+
     public void updateNotification(String title, String text) {
         Log.d(TAG, "updateNotification");
 
@@ -102,10 +115,11 @@ public class PhoneService extends Service {
      * @param socket The BluetoothSocket on which the connection was made
      */
     public synchronized void connected(BluetoothSocket socket) {
-        Log.d(TAG, "connected");
+        BluetoothDevice device = socket.getRemoteDevice();
+        Log.d(TAG, "Connected to: " + device.getName() + " (" + device.getAddress() + ")");
 
-        updateNotification("Connecting to: " + socket.getRemoteDevice().getName(),
-                "Address: " + socket.getRemoteDevice().getAddress());
+        updateNotification("Connecting to: " + device.getName(),
+                "Address: " + device.getAddress());
 
         // Cancel the thread that completed the connection
         if (mAcceptThread != null) {
@@ -166,10 +180,10 @@ public class PhoneService extends Service {
     /**
      * Write to the ConnectedThread in an unsynchronized manner
      *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
+     * @param data The bytes to write
+     * @see ConnectedThread#write(String)
      */
-    public void write(byte[] out) {
+    public void write(String data) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -178,7 +192,7 @@ public class PhoneService extends Service {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.write(out);
+        r.write(data);
     }
 
     /*
@@ -205,7 +219,7 @@ public class PhoneService extends Service {
             try {
                 tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("NotiWatch", MY_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "listen() failed", e);
+                Log.e(TAG, "Error while creating the BluetoothServerSocket!", e);
             }
             mmServerSocket = tmp;
             mState = STATE_LISTEN;
@@ -214,7 +228,7 @@ public class PhoneService extends Service {
         }
 
         public void run() {
-            Log.d(TAG, "BEGIN mAcceptThread" + this);
+            Log.d(TAG, "Starting AcceptThread...");
 
             BluetoothSocket socket;
 
@@ -225,7 +239,7 @@ public class PhoneService extends Service {
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
-                    Log.e(TAG, "accept() failed", e);
+                    Log.e(TAG, "Error while creating the BluetoothSocket!", e);
                     break;
                 }
 
@@ -243,23 +257,22 @@ public class PhoneService extends Service {
                                 try {
                                     socket.close();
                                 } catch (IOException e) {
-                                    Log.e(TAG, "Could not close unwanted socket", e);
+                                    Log.e(TAG, "Could not close the unwanted socket!", e);
                                 }
                                 break;
                         }
                     }
                 }
             }
-            Log.i(TAG, "END mAcceptThread");
-
+            Log.i(TAG, "Finishing AcceptThread...");
         }
 
         void cancel() {
-            Log.d(TAG, "cancel " + this);
+            Log.i(TAG, "Closing sockets...");
             try {
                 mmServerSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "close() of server failed", e);
+                Log.e(TAG, "Couuld not close the socket!", e);
             }
         }
     }
@@ -270,11 +283,11 @@ public class PhoneService extends Service {
      */
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
+        private final BufferedReader mmInStream;
+        private final BufferedWriter mmOutStream;
 
         ConnectedThread(BluetoothSocket socket) {
-            Log.d(TAG, "create ConnectedThread");
+            Log.d(TAG, "Created ConnectedThread");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -284,33 +297,26 @@ public class PhoneService extends Service {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
-                Log.e(TAG, "temp sockets not created", e);
+                Log.e(TAG, "Error while creating temporary streams!", e);
             }
 
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
+            mmInStream = new BufferedReader(new InputStreamReader(tmpIn));
+            mmOutStream = new BufferedWriter(new OutputStreamWriter(tmpOut));
             mState = STATE_CONNECTED;
             updateNotification("Connected to: " + socket.getRemoteDevice().getName(),
                     "Address: " + socket.getRemoteDevice().getAddress());
         }
 
         public void run() {
-            Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
-            int bytes;
+            Log.i(TAG, "Started ConnectedThread...");
 
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-                    Log.d(TAG, "run: Received \"" + new String(buffer, 0, bytes) + "\"");
-
-                    if (mHandler != null) {
-                        mHandler.obtainMessage(1, bytes, -1, buffer).sendToTarget();
-                    }
+                    handleMessage(mmInStream.readLine());
                 } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
+                    Log.e(TAG, "Disconnected from remote device!", e);
                     disconnected();
                     break;
                 }
@@ -320,25 +326,28 @@ public class PhoneService extends Service {
         /**
          * Write to the connected OutStream.
          *
-         * @param buffer The bytes to write
+         * @param data The string to write
          */
-        public void write(byte[] buffer) {
+        public void write(String data) {
             try {
-                mmOutStream.write(buffer);
-
-                if (mHandler != null) {
-                    mHandler.obtainMessage(2, -1, -1, buffer);
-                }
+                mmOutStream.write(data);
+                // Write a carriage return after the data to indicate we've
+                // finished sending
+                mmOutStream.write("\r");
+                // Flush the stream to send the data
+                mmOutStream.flush();
             } catch (IOException e) {
-                Log.e(TAG, "Exception during write", e);
+                Log.e(TAG, "Error while writing the data!", e);
             }
         }
 
         void cancel() {
             try {
+                mmInStream.close();
+                mmOutStream.close();
                 mmSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "close() of connect socket failed", e);
+                Log.e(TAG, "Error while closing the streams and socket!", e);
             }
         }
     }
