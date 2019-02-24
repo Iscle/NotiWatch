@@ -26,18 +26,12 @@ import java.io.OutputStreamWriter;
 import java.util.UUID;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import static me.iscle.notiwatch.App.NOTIFICATION_CHANNEL_ID;
 
 public class PhoneService extends Service {
     private static final String TAG = "PhoneService";
-
-    private final IBinder mBinder = new PhoneBinder();
-    private BluetoothAdapter mBluetoothAdapter;
-    private Handler mHandler = null;
-    private static final UUID MY_UUID = UUID.fromString("c4547ff6-e6e4-4ccd-9a30-4cdce6249d19");
-    private AcceptThread mAcceptThread;
-    private ConnectedThread mConnectedThread;
-
-    private int mState;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0; // we're doing nothing
@@ -46,6 +40,15 @@ public class PhoneService extends Service {
 
     public static final int SERVICE_NOTIFICATION_ID = 1;
     public static final int REQUEST_ENABLE_BT = 2;
+
+    private static final UUID MY_UUID = UUID.fromString("c4547ff6-e6e4-4ccd-9a30-4cdce6249d19");
+    private final IBinder mBinder = new PhoneBinder();
+
+    private BluetoothAdapter mBluetoothAdapter;
+    private Handler mHandler;
+    private AcceptThread mAcceptThread;
+    private ConnectedThread mConnectedThread;
+    private int mState;
 
     @Override
     public void onCreate() {
@@ -56,17 +59,19 @@ public class PhoneService extends Service {
         Notification notification = newNotification("No watch connected...", "Click to open the app");
         startForeground(SERVICE_NOTIFICATION_ID, notification);
 
+        // Set the initial state
+        mState = STATE_NONE;
+        mHandler = null;
+
         // Get the watch's bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "onCreate: BluetoothAdapter is null!");
+            return;
         }
 
-        // Set the initial state
-        mState = STATE_NONE;
-
         // Start the AcceptThread
-        start();
+        startBluetoothConnection();
     }
 
     public void setHandler(Handler mHandler) {
@@ -74,9 +79,32 @@ public class PhoneService extends Service {
     }
 
     private void handleMessage(String data) {
-        Log.d(TAG, "handleMessage: " + new String(data));
+        Log.d(TAG, "handleMessage: " + data);
         Capsule capsule = new Gson().fromJson(data, Capsule.class);
-        Log.d(TAG, "handleMessage: " + capsule.toJSONByteArray());
+
+        switch (capsule.getCommand()) {
+            case 1:
+                PhoneNotification pn = new Gson().fromJson(capsule.getData(), PhoneNotification.class);
+
+                Notification notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_smartphone_black_24dp)
+                        .setContentTitle(pn.getTitle())
+                        .setContentText(pn.getText())
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .addAction(R.drawable.ic_smartphone_black_24dp, "Test button", null)
+                        .build();
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                notificationManager.notify(pn.getId(), notification);
+                break;
+            default:
+
+                break;
+        }
+
+        if (mHandler != null) {
+            // Do UI work
+        }
     }
 
     public void updateNotification(String title, String text) {
@@ -91,7 +119,7 @@ public class PhoneService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        stop();
+        stopBluetoothConnection();
         stopForeground(true);
         super.onDestroy();
     }
@@ -142,8 +170,8 @@ public class PhoneService extends Service {
      * Start AcceptThread to begin a session in listening (server) mode.
      * Called by the Service onCreate()
      */
-    public synchronized void start() {
-        Log.d(TAG, "start");
+    public synchronized void startBluetoothConnection() {
+        Log.d(TAG, "startBluetoothConnection");
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
@@ -159,10 +187,10 @@ public class PhoneService extends Service {
     }
 
     /**
-     * Stop all threads
+     * Stops all bluetooth threads
      */
-    public synchronized void stop() {
-        Log.d(TAG, "stop");
+    public synchronized void stopBluetoothConnection() {
+        Log.d(TAG, "stopBluetoothConnection");
 
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
@@ -180,10 +208,10 @@ public class PhoneService extends Service {
     /**
      * Write to the ConnectedThread in an unsynchronized manner
      *
-     * @param data The bytes to write
+     * @param data The bytes to bluetoothWrite
      * @see ConnectedThread#write(String)
      */
-    public void write(String data) {
+    public void bluetoothWrite(String data) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -191,16 +219,28 @@ public class PhoneService extends Service {
             if (mState != STATE_CONNECTED) return;
             r = mConnectedThread;
         }
-        // Perform the write unsynchronized
+        // Perform the bluetoothWrite unsynchronized
         r.write(data);
     }
 
     /*
      * Indicate that the connection was lost
      */
-    public synchronized void disconnected() {
+    public synchronized void bluetoothDisconnected() {
         mState = STATE_NONE;
-        start();
+        startBluetoothConnection();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        // Set the Handler to null as we don't have any activity attached anymore
+        mHandler = null;
+        return super.onUnbind(intent);
     }
 
     /**
@@ -228,7 +268,7 @@ public class PhoneService extends Service {
         }
 
         public void run() {
-            Log.d(TAG, "Starting AcceptThread...");
+            Log.d(TAG, "Starting AcceptThread");
 
             BluetoothSocket socket;
 
@@ -264,11 +304,11 @@ public class PhoneService extends Service {
                     }
                 }
             }
-            Log.i(TAG, "Finishing AcceptThread...");
+            Log.i(TAG, "Finishing AcceptThread");
         }
 
         void cancel() {
-            Log.i(TAG, "Closing sockets...");
+            Log.i(TAG, "Closing sockets");
             try {
                 mmServerSocket.close();
             } catch (IOException e) {
@@ -308,7 +348,7 @@ public class PhoneService extends Service {
         }
 
         public void run() {
-            Log.i(TAG, "Started ConnectedThread...");
+            Log.i(TAG, "Started ConnectedThread");
 
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
@@ -317,7 +357,7 @@ public class PhoneService extends Service {
                     handleMessage(mmInStream.readLine());
                 } catch (IOException e) {
                     Log.e(TAG, "Disconnected from remote device!", e);
-                    disconnected();
+                    bluetoothDisconnected();
                     break;
                 }
             }
@@ -326,7 +366,7 @@ public class PhoneService extends Service {
         /**
          * Write to the connected OutStream.
          *
-         * @param data The string to write
+         * @param data The string to bluetoothWrite
          */
         public void write(String data) {
             try {
@@ -350,18 +390,6 @@ public class PhoneService extends Service {
                 Log.e(TAG, "Error while closing the streams and socket!", e);
             }
         }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        // Set the Handler to null as we don't have any activity attached anymore
-        mHandler = null;
-        return super.onUnbind(intent);
     }
 
     public class PhoneBinder extends Binder {
