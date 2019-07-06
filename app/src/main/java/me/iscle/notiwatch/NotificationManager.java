@@ -11,10 +11,6 @@ public class NotificationManager {
         // Empty constructor
     }
 
-    private static class Holder {
-        private static final NotificationManager instance = new NotificationManager();
-    }
-
     public static NotificationManager getInstance() {
         return Holder.instance;
     }
@@ -25,6 +21,10 @@ public class NotificationManager {
 
     public boolean notificationRemoved(String packageName, int notificationId) {
         return false;
+    }
+
+    private static class Holder {
+        private static final NotificationManager instance = new NotificationManager();
     }
 
 }
