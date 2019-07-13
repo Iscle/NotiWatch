@@ -5,6 +5,8 @@ import java.util.Arrays;
 public class PhoneNotification {
     private static final String TAG = "PhoneNotification";
 
+    private String appName;
+
     // StatusBarNotification data
     private String groupKey;
     private int id;
@@ -18,7 +20,7 @@ public class PhoneNotification {
     private NotificationAction[] actions;
     private int color;
     //private Bundle extras;
-    private Long when;
+    private long when;
     private String largeIcon;
     private String smallIcon;
     private String title;
@@ -30,6 +32,11 @@ public class PhoneNotification {
     private String picture;
     private String summaryText;
     private String[] textLines;
+    private String template;
+
+    public String getAppName() {
+        return appName;
+    }
 
     public String getGroupKey() {
         return groupKey;
@@ -115,6 +122,10 @@ public class PhoneNotification {
         return textLines;
     }
 
+    public String getTemplate() {
+        return template;
+    }
+
     @Override
     public String toString() {
         return "PhoneNotification{" +
@@ -135,7 +146,8 @@ public class PhoneNotification {
                 ", largeIconBig='" + largeIconBig + '\'' +
                 ", picture='" + picture + '\'' +
                 ", summaryText='" + summaryText + '\'' +
-                ", textLines=" + Arrays.toString(textLines) +
+                ", textLines=" + Arrays.toString(textLines) + '\'' +
+                ", template=" + template +
                 '}';
     }
 }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- For notifications -->
+    <color name="notification_default_color">#757575</color> <!-- Gray 600 -->
+    <!-- The color white, equivalent to 0xffffffff -->
+    <color name="white">#ffffffff</color>
+    <color name="material_grey_300" tools:override="true">#ffe0e0e0</color>
+    <color name="notification_secondary_text_color_light">
+        @color/primary_text_default_material_light
+    </color>
 </resources>

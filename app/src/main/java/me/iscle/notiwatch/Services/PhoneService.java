@@ -107,11 +107,7 @@ public class PhoneService extends Service {
                 PhoneNotification pn = capsule.getData(PhoneNotification.class);
                 Log.d(TAG, "handleMessage: " + pn.toString());
 
-                if (pn.getSmallIcon() != null && activity != null)
-                    activity.setSmallImage(pn.getSmallIcon());
-                if (pn.getLargeIcon() != null && activity != null)
-                    activity.setLargeImage(pn.getLargeIcon());
-                activity.setText(pn.getTitle() != null ? pn.getTitle() : "", pn.getText() != null ? pn.getText() : "", pn.getSubText() != null ? pn.getSubText() : "");
+                activity.newNotification(pn.getSmallIcon(), pn.getColor(), pn.getAppName(), pn.getWhen(), pn.getTitle(), pn.getText());
                 break;
             case GET_BATTERY_STATUS:
                 sendBattery();

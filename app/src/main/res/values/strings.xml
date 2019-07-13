@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">NotiWatch</string>
+
+    <!-- Content description of the expand button icon in the notification when expanded.-->
+    <string name="expand_button_content_description_expanded">Collapse</string>
+    <!-- Content description of the expand button icon in the notification when collaped.-->
+    <string name="expand_button_content_description_collapsed">Expand</string>
+    <!-- Active Permission - accessibility support -->
+    <!-- Content description of the camera icon in the notification. [CHAR LIMIT=NONE] -->
+    <string name="notification_appops_camera_active">Camera</string>
+    <!-- Content description of the mic icon in the notification. [CHAR LIMIT=NONE] -->
+    <string name="notification_appops_microphone_active">Microphone</string>
+    <!-- Content description of the overlay icon in the notification. [CHAR LIMIT=NONE] -->
+    <string name="notification_appops_overlay_active">displaying over other apps on your screen</string>
+    <!-- Content description of the work profile icon in the notification. -->
+    <string name="notification_work_profile_content_description">Work profile</string>
+    <!-- The divider symbol between different parts of the notification header. not translatable [CHAR LIMIT=1] -->
+    <string name="notification_header_divider_symbol" translatable="false">•</string>
+    <!-- Content description for the reply button in the notification area [CHAR LIMIT=NONE]-->
+    <string name="notification_reply_button_accessibility">Reply</string>
 </resources>
