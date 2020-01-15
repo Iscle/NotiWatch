@@ -87,7 +87,7 @@
         android:textSize="@dimen/notification_subtext_size"
         android:visibility="gone" />
 
-    <me.iscle.notiwatch.CustomViews.DateTimeView
+    <me.iscle.notiwatch.view.DateTimeView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

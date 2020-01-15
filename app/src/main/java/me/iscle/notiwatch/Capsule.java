@@ -24,4 +24,8 @@ public class Capsule {
     public <T> T getData(Class<T> type) {
         return gson.fromJson(data, type);
     }
+
+    public String getRawData() {
+        return data;
+    }
 }

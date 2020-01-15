@@ -1,7 +1,5 @@
 package me.iscle.notiwatch;
 
-import java.util.Arrays;
-
 public class PhoneNotification {
     private static final String TAG = "PhoneNotification";
 
@@ -9,30 +7,55 @@ public class PhoneNotification {
 
     // StatusBarNotification data
     private String groupKey;
-    private int id;
+    private String id;
     private String key;
+    private String opPkg;
+    private String overrideGroupKey;
     private String packageName;
+    private long postTime;
+    private String tag;
+    private int uid;
     private boolean isClearable;
     private boolean isGroup;
     private boolean isOngoing;
 
     // Notification data
     private NotificationAction[] actions;
+    private String category;
     private int color;
-    //private Bundle extras;
+    private int flags;
+    private int number;
+    private String tickerText;
+    private int visibility;
     private long when;
+    private String group;
     private String largeIcon;
     private String smallIcon;
-    private String title;
-    private String text;
-    private String subText;
+    private String sortKey;
+
+    // Notification data extras
     private String bigText;
+    private boolean chronometerCountDown;
+    private int[] compactActions;
     private String conversationTitle;
+    private String infoText;
     private String largeIconBig;
+    private Integer mediaSession;
+    //private Bundle[] messages;
+    private String[] people;
     private String picture;
+    private int progress;
+    private boolean progressIndeterminate;
+    private int progressMax;
+    private boolean showChronometer;
+    private boolean showWhen;
+    private String subText;
     private String summaryText;
-    private String[] textLines;
     private String template;
+    private String text;
+    private String[] textLines;
+    private String title;
+    private String titleBig;
 
     public String getAppName() {
         return appName;
@@ -42,7 +65,7 @@ public class PhoneNotification {
         return groupKey;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -126,28 +149,7 @@ public class PhoneNotification {
         return template;
     }
 
-    @Override
-    public String toString() {
-        return "PhoneNotification{" +
-                "groupKey='" + groupKey + '\'' +
-                ", id=" + id +
-                ", key='" + key + '\'' +
-                ", packageName='" + packageName + '\'' +
-                ", isClearable=" + isClearable +
-                ", isGroup=" + isGroup +
-                ", isOngoing=" + isOngoing +
-                ", color=" + color +
-                ", when=" + when +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", subText='" + subText + '\'' +
-                ", bigText='" + bigText + '\'' +
-                ", conversationTitle='" + conversationTitle + '\'' +
-                ", largeIconBig='" + largeIconBig + '\'' +
-                ", picture='" + picture + '\'' +
-                ", summaryText='" + summaryText + '\'' +
-                ", textLines=" + Arrays.toString(textLines) + '\'' +
-                ", template=" + template +
-                '}';
+    public int[] getCompactActions() {
+        return compactActions;
     }
 }

@@ -1,4 +1,4 @@
-package me.iscle.notiwatch.CustomViews;
+package me.iscle.notiwatch.view;
 
 import android.content.Context;
 import android.content.res.Resources;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.iscle.notiwatch.CustomViews;
+package me.iscle.notiwatch.view;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
