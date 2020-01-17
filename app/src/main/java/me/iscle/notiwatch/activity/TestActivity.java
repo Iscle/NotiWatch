@@ -1,4 +1,4 @@
-package me.iscle.notiwatch;
+package me.iscle.notiwatch.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -33,6 +33,12 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import me.iscle.notiwatch.App;
+import me.iscle.notiwatch.Command;
+import me.iscle.notiwatch.NotificationAction;
+import me.iscle.notiwatch.PhoneNotification;
+import me.iscle.notiwatch.R;
+import me.iscle.notiwatch.data.NotificationManager;
 import me.iscle.notiwatch.view.DateTimeView;
 import me.iscle.notiwatch.service.PhoneBluetoothService;
 import me.iscle.notiwatch.service.PhoneService;
@@ -41,8 +47,8 @@ import static me.iscle.notiwatch.Constants.BROADCAST_NOTIFICATION_POSTED;
 import static me.iscle.notiwatch.Utils.base64ToBitmap;
 import static me.iscle.notiwatch.Utils.dpToPixels;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class TestActivity extends AppCompatActivity {
+    private static final String TAG = "TestActivity";
 
     private PhoneBluetoothService phoneBluetoothService;
 
@@ -71,11 +77,14 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout actionLayout;
 
     private LocalBroadcastManager localBroadcastManager;
+    private NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_test);
+
+        notificationManager = ((App) getApplication()).getDataManager().getNotificationManager();
 
         mainLayout = findViewById(R.id.main_layout);
         constraintLayout = findViewById(R.id.constraintLayout);
@@ -113,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             switch (intent.getAction()) {
                 case BROADCAST_NOTIFICATION_POSTED:
                     Log.d(TAG, "onReceive: started parsing notification");
-                    PhoneNotification pn = new Gson().fromJson(intent.getStringExtra("phoneNotification"), PhoneNotification.class);
+                    PhoneNotification pn = notificationManager.getLastActiveNotification();
                     newNotification(pn);
                     Log.d(TAG, "onReceive: finished displaying notification");
                     break;

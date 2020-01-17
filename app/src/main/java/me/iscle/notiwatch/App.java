@@ -5,6 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import me.iscle.notiwatch.data.DataManager;
+
 public class App extends Application {
     public static final String SERVICE_CHANNEL_ID = "service_channel";
     public static final String NOTIFICATION_CHANNEL_ID = "notification_channel";
@@ -12,11 +14,19 @@ public class App extends Application {
 
     public static final String SERVICE_PREFERENCES = "service_preferences";
 
+    private DataManager dataManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         createNotificationChannels();
+
+        dataManager = new DataManager();
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 
     private void createNotificationChannels() {

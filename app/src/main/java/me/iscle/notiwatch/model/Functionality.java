@@ -1,20 +1,19 @@
 package me.iscle.notiwatch.model;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.app.Activity;
 
 public class Functionality {
-    private Drawable icon;
+    private int icon;
     private String name;
-    private Intent action;
+    private Class<? extends Activity> activity;
 
-    public Functionality(Drawable icon, String name, Intent action) {
+    public Functionality(int icon, String name, Class<? extends Activity> activity) {
         this.icon = icon;
         this.name = name;
-        this.action = action;
+        this.activity = activity;
     }
 
-    public Drawable getIcon() {
+    public int getIcon() {
         return icon;
     }
 
@@ -22,7 +21,7 @@ public class Functionality {
         return name;
     }
 
-    public Intent getAction() {
-        return action;
+    public Class<? extends Activity> getActivity() {
+        return activity;
     }
 }

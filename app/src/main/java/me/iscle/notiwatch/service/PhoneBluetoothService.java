@@ -10,9 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -22,6 +20,8 @@ import com.google.gson.Gson;
 import me.iscle.notiwatch.App;
 import me.iscle.notiwatch.Capsule;
 import me.iscle.notiwatch.Command;
+import me.iscle.notiwatch.PhoneNotification;
+import me.iscle.notiwatch.data.DataManager;
 import me.iscle.notiwatch.model.Status;
 import me.iscle.notiwatch.R;
 
@@ -43,6 +43,8 @@ public class PhoneBluetoothService extends PhoneService {
     private Handler handler;
     private LocalBroadcastManager localBroadcastManager;
 
+    private DataManager dataManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,6 +59,7 @@ public class PhoneBluetoothService extends PhoneService {
         Notification notification = newNotification("No phone connected...", "Click to open the app");
         startForeground(SERVICE_NOTIFICATION_ID, notification);
 
+        dataManager = ((App) getApplication()).getDataManager();
         handler = new Handler();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
@@ -80,8 +83,9 @@ public class PhoneBluetoothService extends PhoneService {
 
         switch (capsule.getCommand()) {
             case NOTIFICATION_POSTED:
+                dataManager.getNotificationManager().addActiveNotification(capsule.getData(PhoneNotification.class));
                 Intent i = new Intent(BROADCAST_NOTIFICATION_POSTED);
-                i.putExtra("phoneNotification", capsule.getRawData());
+                //i.putExtra("phoneNotification", capsule.getRawData());
                 localBroadcastManager.sendBroadcast(i);
                 break;
             case GET_BATTERY_STATUS:
@@ -140,7 +144,6 @@ public class PhoneBluetoothService extends PhoneService {
     }
 
     public void setCurrentDevice(BluetoothDevice device) {
-        Log.d(TAG, "setCurrentDevice: " + device.getName());
         currentDevice = device;
     }
 

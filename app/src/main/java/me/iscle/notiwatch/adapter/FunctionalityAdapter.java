@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.widget.WearableRecyclerView;
 
-import me.iscle.notiwatch.MainActivity;
+import java.util.Arrays;
+
+import me.iscle.notiwatch.activity.NotificationsActivity;
+import me.iscle.notiwatch.activity.SettingsActivity;
+import me.iscle.notiwatch.activity.TestActivity;
 import me.iscle.notiwatch.model.Functionality;
 import me.iscle.notiwatch.R;
 
@@ -23,9 +27,14 @@ public class FunctionalityAdapter extends WearableRecyclerView.Adapter {
 
     public FunctionalityAdapter(Context context) {
         this.context = context;
-        functionalities = new Functionality[] {
-                new Functionality(null, "Test", new Intent(context, MainActivity.class))
+
+        this.functionalities = new Functionality[] {
+                new Functionality(R.drawable.ic_wrench_color, "TestActivity", TestActivity.class),
+                new Functionality(R.drawable.ic_gear_color, "Settings", SettingsActivity.class),
+                new Functionality(R.drawable.ic_bell_color, "Notifications", NotificationsActivity.class)
         };
+
+        Arrays.sort(this.functionalities, (o1, o2) -> o1.getName().compareTo(o2.getName()));
     }
 
     @NonNull
@@ -49,24 +58,23 @@ public class FunctionalityAdapter extends WearableRecyclerView.Adapter {
 
 
     public class ViewHolder extends WearableRecyclerView.ViewHolder {
-        private View itemView;
+        private View view;
         private ImageView icon;
         private TextView title;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.itemView = itemView;
+
+            this.view = itemView;
             this.icon = itemView.findViewById(R.id.icon);
             this.title = itemView.findViewById(R.id.title);
         }
 
         public void bindFunctionality(Functionality functionality) {
-            if (functionality.getIcon() != null) {
-                icon.setImageDrawable(functionality.getIcon());
-            }
-
+            icon.setImageResource(functionality.getIcon());
             title.setText(functionality.getName());
-            itemView.setOnClickListener(v -> context.startActivity(functionality.getAction()));
+            view.setOnClickListener(v ->
+                    context.startActivity(new Intent(context, functionality.getActivity())));
         }
     }
 }

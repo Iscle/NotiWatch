@@ -10,8 +10,8 @@ import android.os.Bundle;
 import me.iscle.notiwatch.adapter.FunctionalityAdapter;
 import me.iscle.notiwatch.R;
 
-public class Main2Activity extends AppCompatActivity {
-    private static final String TAG = "Main2Activity";
+public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private WearableRecyclerView functionalityRecyclerView;
     private FunctionalityAdapter functionalityAdapter;
@@ -19,7 +19,7 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
 
         functionalityRecyclerView = findViewById(R.id.wearable_recycler_view);
         functionalityRecyclerView.setEdgeItemsCenteringEnabled(true);

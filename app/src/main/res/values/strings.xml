@@ -18,4 +18,17 @@
     <string name="notification_header_divider_symbol" translatable="false">•</string>
     <!-- Content description for the reply button in the notification area [CHAR LIMIT=NONE]-->
     <string name="notification_reply_button_accessibility">Reply</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="notifications_header">Notifications</string>
+    <string name="miscellaneous_header">Miscellaneous</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Misc Preferences -->
+    <string name="enable_keep_alive">Send keep-alive packets</string>
+    <string name="keep_alive_summary">Enable only if your connection is not stable</string>
 </resources>
