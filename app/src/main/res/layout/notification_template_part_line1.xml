@@ -18,6 +18,7 @@
     android:id="@+id/line1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="horizontal">
 
     <TextView
@@ -25,21 +26,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:fontFamily="sans-serif-medium"
         android:singleLine="true"
-        android:textAlignment="viewStart"
-        android:textSize="@dimen/notification_title_text_size" />
+        android:textAlignment="center"
+        android:textSize="@dimen/notification_title_text_size"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/text_line_1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:gravity="end|bottom"
         android:singleLine="true"
+        android:textAlignment="center"
         android:textColor="@color/notification_secondary_text_color_light"
         android:textSize="@dimen/notification_text_size" />
 </LinearLayout>

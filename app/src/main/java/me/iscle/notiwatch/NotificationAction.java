@@ -1,15 +1,17 @@
 package me.iscle.notiwatch;
 
+import android.graphics.drawable.Icon;
+
 public class NotificationAction {
     private String title;
-    private String icon;
+    private Icon icon;
     private int hashCode;
 
     public String getTitle() {
         return title;
     }
 
-    public String getIcon() {
+    public Icon getIcon() {
         return icon;
     }
 

@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.iscle.notiwatch.PhoneNotification;
+import me.iscle.notiwatch.model.PhoneNotification;
 
-public class NotificationManager {
-    private static final String TAG = "NotificationManager";
+public class LocalNotificationManager {
+    private static final String TAG = "LocalNotificationManager";
 
     private Map<String, PhoneNotification> activeNotifications;
     private Map<String, PhoneNotification> removedNotifications;
     private PhoneNotification lastActiveNotification;
 
-    public NotificationManager() {
+    public LocalNotificationManager() {
         activeNotifications = new HashMap<>();
         removedNotifications = new HashMap<>();
     }

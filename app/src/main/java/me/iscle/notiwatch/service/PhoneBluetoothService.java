@@ -20,7 +20,8 @@ import com.google.gson.Gson;
 import me.iscle.notiwatch.App;
 import me.iscle.notiwatch.Capsule;
 import me.iscle.notiwatch.Command;
-import me.iscle.notiwatch.PhoneNotification;
+import me.iscle.notiwatch.activity.NotificationActivity;
+import me.iscle.notiwatch.model.PhoneNotification;
 import me.iscle.notiwatch.data.DataManager;
 import me.iscle.notiwatch.model.Status;
 import me.iscle.notiwatch.R;
@@ -83,10 +84,15 @@ public class PhoneBluetoothService extends PhoneService {
 
         switch (capsule.getCommand()) {
             case NOTIFICATION_POSTED:
-                dataManager.getNotificationManager().addActiveNotification(capsule.getData(PhoneNotification.class));
+                dataManager.getLocalNotificationManager().addActiveNotification(capsule.getData(PhoneNotification.class));
                 Intent i = new Intent(BROADCAST_NOTIFICATION_POSTED);
                 //i.putExtra("phoneNotification", capsule.getRawData());
                 localBroadcastManager.sendBroadcast(i);
+                Intent in = new Intent(this, NotificationActivity.class);
+                in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                in.putExtra("phoneNotification", capsule.getRawData());
+                startActivity(in);
                 break;
             case GET_BATTERY_STATUS:
                 sendBattery();

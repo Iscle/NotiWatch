@@ -78,6 +78,6 @@
             android:layout_marginTop="@dimen/notification_content_margin"
             android:layout_marginEnd="@dimen/notification_content_margin_end" />
 
-        <include layout="@layout/notification_material_action_list" />
+        <!--<include layout="@layout/notification_material_action_list" />-->
     </LinearLayout>
 </FrameLayout>

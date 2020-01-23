@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 
+import androidx.annotation.Nullable;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,12 +24,6 @@ public class Utils {
     public static int pixelsToDp(Context context, int pixels) {
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round((float) pixels / displayMetrics.density);
-    }
-
-    public static Bitmap base64ToBitmap(String s) {
-        byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
-
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
     public static void writeLength(OutputStream os, int length) throws IOException {

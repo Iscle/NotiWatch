@@ -16,6 +16,6 @@
 <ViewStub xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/progress"
     android:layout_width="match_parent"
-    android:layout_height="15dp"
+    android:layout_height="@dimen/notification_progress_bar_height"
     android:layout="@layout/notification_template_progressbar"
     android:visibility="gone" />

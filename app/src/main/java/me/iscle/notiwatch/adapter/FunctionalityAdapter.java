@@ -14,9 +14,9 @@ import androidx.wear.widget.WearableRecyclerView;
 
 import java.util.Arrays;
 
+import me.iscle.notiwatch.TestActivityNew;
 import me.iscle.notiwatch.activity.NotificationsActivity;
 import me.iscle.notiwatch.activity.SettingsActivity;
-import me.iscle.notiwatch.activity.TestActivity;
 import me.iscle.notiwatch.model.Functionality;
 import me.iscle.notiwatch.R;
 
@@ -29,7 +29,7 @@ public class FunctionalityAdapter extends WearableRecyclerView.Adapter {
         this.context = context;
 
         this.functionalities = new Functionality[] {
-                new Functionality(R.drawable.ic_wrench_color, "TestActivity", TestActivity.class),
+                new Functionality(R.drawable.ic_wrench_color, "TestActivityNew", TestActivityNew.class),
                 new Functionality(R.drawable.ic_gear_color, "Settings", SettingsActivity.class),
                 new Functionality(R.drawable.ic_bell_color, "Notifications", NotificationsActivity.class)
         };

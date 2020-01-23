@@ -14,7 +14,7 @@
 ** limitations under the License.
 */
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- The alpha of a disabled notification button -->
     <item name="notification_action_disabled_alpha" format="float" type="dimen">0.5</item>
     <!-- The size of the media actions in the media notification. -->
@@ -35,7 +35,7 @@
     <!-- Size of the profile badge for notifications -->
     <dimen name="notification_badge_size">12dp</dimen>
     <!-- height of the content margin to accomodate for the header -->
-    <dimen name="notification_content_margin_top">46dp</dimen>
+    <dimen name="notification_content_margin_top">8dp</dimen>
     <!-- The height of the notification action list -->
     <dimen name="notification_action_list_height">60dp</dimen>
     <!-- The minimum height of the content if there are at least two lines or a picture-->
@@ -72,19 +72,21 @@
     <!-- Size of the stroke with for the emphasized notification button style -->
     <dimen name="emphasized_button_stroke_width">1dp</dimen>
     <!-- size (width and height) of the icon in the notification header -->
-    <dimen name="notification_header_icon_size">18dp</dimen>
+    <dimen name="notification_header_icon_size">64dp</dimen>
     <!-- The end margin after the application icon in the notification header -->
     <dimen name="notification_header_icon_margin_end">3dp</dimen>
     <!-- Size of notification text (see TextAppearance.StatusBar.EventContent) -->
-    <dimen name="notification_text_size">14sp</dimen>
+    <dimen name="notification_text_size">24sp</dimen>
     <!-- The minimum width of the app name in the header if it shrinks -->
     <dimen name="notification_header_shrink_min_width">72dp</dimen>
     <!-- Size of notification text titles (see TextAppearance.StatusBar.EventContent.Title) -->
-    <dimen name="notification_title_text_size">14sp</dimen>
+    <dimen name="notification_title_text_size">30sp</dimen>
     <!-- The absolute size of the notification expand icon. -2 for wrap_content. -->
     <dimen name="notification_header_expand_icon_size">-2px</dimen>
     <!-- The top padding for the notification expand button. -->
     <dimen name="notification_expand_button_padding_top">1dp</dimen>
     <!-- The spacing between messages in Notification.MessagingStyle -->
     <dimen name="notification_messaging_spacing">6dp</dimen>
+    <dimen name="notification_subtext_size" tools:override="true">18sp</dimen>
+    <dimen name="notification_right_icon_size" tools:override="true">64dp</dimen>
 </resources>

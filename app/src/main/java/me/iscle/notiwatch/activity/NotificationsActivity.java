@@ -3,7 +3,6 @@ package me.iscle.notiwatch.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +15,7 @@ import android.widget.TextView;
 
 import me.iscle.notiwatch.App;
 import me.iscle.notiwatch.data.DataManager;
-import me.iscle.notiwatch.data.NotificationManager;
+import me.iscle.notiwatch.data.LocalNotificationManager;
 import me.iscle.notiwatch.R;
 import me.iscle.notiwatch.adapter.NotificationAdapter;
 
@@ -28,7 +27,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noNotifications;
     private NotificationAdapter notificationAdapter;
-    private NotificationManager notificationManager;
+    private LocalNotificationManager localNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,14 @@ public class NotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notifications);
 
         DataManager dataManager = ((App) getApplication()).getDataManager();
-        notificationManager = dataManager.getNotificationManager();
+        localNotificationManager = dataManager.getLocalNotificationManager();
 
         recyclerView = findViewById(R.id.recycler_view);
         noNotifications = findViewById(R.id.no_notifications_text_view);
-        notificationAdapter = new NotificationAdapter(notificationManager.getActiveNotifications(), noNotifications);
+        notificationAdapter = new NotificationAdapter(localNotificationManager.getActiveNotifications(), noNotifications);
 
         recyclerView.setAdapter(notificationAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         new PagerSnapHelper().attachToRecyclerView(recyclerView);
 
         IntentFilter filter = new IntentFilter();
@@ -61,7 +60,7 @@ public class NotificationsActivity extends AppCompatActivity {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            notificationAdapter.setPhoneNotifications(notificationManager.getActiveNotifications());
+            notificationAdapter.setPhoneNotifications(localNotificationManager.getActiveNotifications());
         }
     };
 }

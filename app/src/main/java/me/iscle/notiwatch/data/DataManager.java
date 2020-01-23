@@ -1,13 +1,13 @@
 package me.iscle.notiwatch.data;
 
 public class DataManager {
-    private NotificationManager notificationManager;
+    private LocalNotificationManager localNotificationManager;
 
     public DataManager() {
-        notificationManager = new NotificationManager();
+        localNotificationManager = new LocalNotificationManager();
     }
 
-    public NotificationManager getNotificationManager() {
-        return notificationManager;
+    public LocalNotificationManager getLocalNotificationManager() {
+        return localNotificationManager;
     }
 }

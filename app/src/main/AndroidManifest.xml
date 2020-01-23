@@ -16,8 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.NotificationsActivity"></activity>
+        <activity android:name=".TestActivityNew"></activity>
+        <activity android:name=".activity.NotificationsActivity" />
         <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".activity.NotificationActivity" />
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -28,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TestActivity" />
 
         <service
             android:name=".service.PhoneBluetoothService"
