@@ -25,7 +25,7 @@ import me.iscle.notiwatch.view.NotificationHeaderView;
 
 public class NotiDrawer {
     private static final String TAG = "NotiDrawer";
-    
+
     public static final int COLOR_DEFAULT = 0; // AKA Color.TRANSPARENT
     public static final int COLOR_INVALID = 1;
 
@@ -335,7 +335,7 @@ public class NotiDrawer {
 
     /**
      * @return true if the built notification will show the time or the chronometer; false
-     *         otherwise
+     * otherwise
      */
     private boolean showsTimeOrChronometer() {
         return mN.showsTime() || mN.showsChronometer();
@@ -351,6 +351,7 @@ public class NotiDrawer {
 
     /**
      * Bind the large icon.
+     *
      * @return if the largeIcon is visible
      */
     private boolean bindLargeIcon(View contentView, StandardTemplateParams p) {
@@ -406,6 +407,7 @@ public class NotiDrawer {
 
     /**
      * Bind the reply icon.
+     *
      * @return if the reply icon is visible
      */
     private boolean bindReplyIcon(View contentView, StandardTemplateParams p, boolean largeIconShown) {
@@ -430,6 +432,7 @@ public class NotiDrawer {
 
     /**
      * Gets a neutral color that can be used for icons or similar that should not stand out.
+     *
      * @param p the template params to inflate this with
      */
     private int getNeutralColor(StandardTemplateParams p) {
@@ -577,7 +580,7 @@ public class NotiDrawer {
 
         protected final NotiDrawer notiDrawer;
 
-        public Style(NotiDrawer notiDrawer){
+        public Style(NotiDrawer notiDrawer) {
             this.notiDrawer = notiDrawer;
 
             mSummaryText = notiDrawer.mN.getSummaryText();
@@ -610,7 +613,7 @@ public class NotiDrawer {
          * Get the standard view for this style.
          *
          * @param layoutId The layout id to use.
-         * @param p the params for this inflation.
+         * @param p        the params for this inflation.
          * @return A remoteView for this style.
          */
         protected View getStandardView(int layoutId, StandardTemplateParams p) {
@@ -655,11 +658,12 @@ public class NotiDrawer {
             return null;
         }
 
-        public void purgeResources() {}
+        public void purgeResources() {
+        }
 
         /**
          * @return true if the style positions the progress bar on the second line; false if the
-         *         style hides the progress bar
+         * style hides the progress bar
          */
         protected boolean hasProgress() {
             return true;
@@ -681,7 +685,6 @@ public class NotiDrawer {
 
         /**
          * Reduces the image sizes contained in this style.
-         *
          */
         public void reduceImageSizes(Context context) {
         }
@@ -697,7 +700,6 @@ public class NotiDrawer {
         /**
          * @return the text that should be displayed in the statusBar when heads-upped.
          * If {@code null} is returned, the default implementation will be used.
-         *
          */
         public CharSequence getHeadsUpStatusBarText() {
             return null;
@@ -706,7 +708,7 @@ public class NotiDrawer {
 
     /**
      * Helper class for generating large-format notifications that include a large image attachment.
-     *
+     * <p>
      * Here's how you'd set the <code>BigPictureStyle</code> on a notification:
      * <pre class="prettyprint">
      * Notification notif = new Notification.Builder(mContext)
@@ -859,7 +861,7 @@ public class NotiDrawer {
         int maxRemoteInputHistory = Style.MAX_REMOTE_INPUT_HISTORY_LINES;
         boolean hideLargeIcon;
         boolean hideReplyIcon;
-        boolean allowColorization  = true;
+        boolean allowColorization = true;
         boolean forceDefaultColor = false;
 
         final StandardTemplateParams reset() {
@@ -933,6 +935,7 @@ public class NotiDrawer {
 
         /**
          * Set the maximum lines of remote input history lines allowed.
+         *
          * @param maxRemoteInputHistory The number of lines.
          * @return The builder for method chaining.
          */

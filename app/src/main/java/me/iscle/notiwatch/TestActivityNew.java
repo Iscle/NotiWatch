@@ -21,7 +21,6 @@ import static me.iscle.notiwatch.Constants.BROADCAST_NOTIFICATION_POSTED;
 
 public class TestActivityNew extends AppCompatActivity {
 
-    private LocalNotificationManager lnm;
     private FrameLayout frame;
 
     @Override
@@ -29,14 +28,18 @@ public class TestActivityNew extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_layout);
 
-        lnm = ((App) getApplication()).getDataManager().getLocalNotificationManager();
-
         frame = findViewById(R.id.frame);
         adjustInset();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_NOTIFICATION_POSTED);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayLastNotification();
     }
 
     private void adjustInset() {
@@ -54,15 +57,19 @@ public class TestActivityNew extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            PhoneNotification pn = lnm.getLastActiveNotification();
-            if (!TextUtils.isEmpty(pn.getTemplate())) return;
-
-            View v = new NotiDrawer(TestActivityNew.this, pn).createContentView();
-            frame.removeAllViews();
-            frame.addView(v);
+            displayLastNotification();
         }
     };
+
+    private void displayLastNotification() {
+        PhoneNotification pn = LocalNotificationManager.getInstance().getLastActiveNotification();
+        if (!TextUtils.isEmpty(pn.getTemplate())) return;
+
+        View v = new NotiDrawer(TestActivityNew.this, pn).createContentView();
+        frame.removeAllViews();
+        frame.addView(v);
+    }
 }

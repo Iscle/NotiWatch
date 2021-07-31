@@ -6,12 +6,16 @@ import android.graphics.drawable.Icon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.nio.charset.StandardCharsets;
+
 import me.iscle.notiwatch.typeadapter.BitmapAdapter;
+import me.iscle.notiwatch.typeadapter.CharSequenceAdapter;
 import me.iscle.notiwatch.typeadapter.IconAdapter;
 
-public class Capsule {
+public final class Capsule {
     private static final transient Gson gson = new GsonBuilder()
             .registerTypeAdapter(Bitmap.class, new BitmapAdapter())
+            .registerTypeAdapter(CharSequence.class, new CharSequenceAdapter())
             .registerTypeAdapter(Icon.class, new IconAdapter())
             .create();
 
@@ -35,11 +39,7 @@ public class Capsule {
         return gson.fromJson(data, type);
     }
 
-    public static <T> T getFromRawData(String rawData, Class<T> type) {
-        return gson.fromJson(rawData, type);
-    }
-
-    public String getRawData() {
-        return data;
+    public static Capsule fromBytes(byte[] data) {
+        return gson.fromJson(new String(data, StandardCharsets.UTF_8), Capsule.class);
     }
 }

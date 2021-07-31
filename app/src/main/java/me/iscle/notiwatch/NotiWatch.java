@@ -3,30 +3,32 @@ package me.iscle.notiwatch;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.IBinder;
 
-import me.iscle.notiwatch.data.DataManager;
+import me.iscle.notiwatch.service.NotiWatchService;
 
-public class App extends Application {
+public class NotiWatch extends Application {
+    private static final String TAG = "NotiWatch";
+
     public static final String SERVICE_CHANNEL_ID = "service_channel";
     public static final String NOTIFICATION_CHANNEL_ID = "notification_channel";
     public static final String MEDIA_CHANNEL_ID = "media_channel";
 
     public static final String SERVICE_PREFERENCES = "service_preferences";
 
-    private DataManager dataManager;
+    private NotiWatchService notiWatchService;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         createNotificationChannels();
-
-        dataManager = new DataManager();
-    }
-
-    public DataManager getDataManager() {
-        return dataManager;
+        startAndBindService();
     }
 
     private void createNotificationChannels() {
@@ -42,5 +44,31 @@ public class App extends Application {
             notificationManager.createNotificationChannel(notificationChannel);
             notificationManager.createNotificationChannel(mediaChannel);
         }
+    }
+
+    private void startAndBindService() {
+        Intent serviceIntent = new Intent(this, NotiWatchService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
+        bindService(serviceIntent, notiWatchServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private final ServiceConnection notiWatchServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            notiWatchService = ((NotiWatchService.NotiWatchBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            notiWatchService = null;
+        }
+    };
+
+    public NotiWatchService getNotiWatchService() {
+        return notiWatchService;
     }
 }

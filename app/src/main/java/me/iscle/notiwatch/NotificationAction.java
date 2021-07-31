@@ -20,8 +20,8 @@ public class NotificationAction {
     }
 
     public static class Callback {
-        private String notificationId;
-        private int hashCode;
+        private final String notificationId;
+        private final int hashCode;
 
         public Callback(String notificationId, int hashCode) {
             this.notificationId = notificationId;

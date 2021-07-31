@@ -18,7 +18,7 @@ import me.iscle.notiwatch.model.PhoneNotification;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
     private List<PhoneNotification> phoneNotifications;
-    private View placeholder;
+    private final View placeholder;
 
     public NotificationAdapter(List<PhoneNotification> phoneNotifications, View placeholder) {
         this.phoneNotifications = phoneNotifications;
@@ -36,6 +36,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public void setPhoneNotifications(List<PhoneNotification> phoneNotifications) {
         this.phoneNotifications = phoneNotifications;
+        checkItemCount();
+        notifyDataSetChanged();
+    }
+
+    public void updateNotifications() {
         checkItemCount();
         notifyDataSetChanged();
     }
@@ -66,7 +71,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ScrollView scrollView;
+        private final ScrollView scrollView;
         private View notificationView;
 
         public ViewHolder(@NonNull View itemView) {

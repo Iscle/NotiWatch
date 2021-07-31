@@ -22,13 +22,13 @@ import me.iscle.notiwatch.R;
 
 public class FunctionalityAdapter extends WearableRecyclerView.Adapter {
 
-    private Functionality[] functionalities;
-    private Context context;
+    private final Functionality[] functionalities;
+    private final Context context;
 
     public FunctionalityAdapter(Context context) {
         this.context = context;
 
-        this.functionalities = new Functionality[] {
+        this.functionalities = new Functionality[]{
                 new Functionality(R.drawable.ic_wrench_color, "TestActivityNew", TestActivityNew.class),
                 new Functionality(R.drawable.ic_gear_color, "Settings", SettingsActivity.class),
                 new Functionality(R.drawable.ic_bell_color, "Notifications", NotificationsActivity.class)
@@ -58,9 +58,9 @@ public class FunctionalityAdapter extends WearableRecyclerView.Adapter {
 
 
     public class ViewHolder extends WearableRecyclerView.ViewHolder {
-        private View view;
-        private ImageView icon;
-        private TextView title;
+        private final View view;
+        private final ImageView icon;
+        private final TextView title;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

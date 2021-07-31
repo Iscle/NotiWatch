@@ -225,7 +225,7 @@ public class DateTimeView extends AppCompatTextView {
                 updateAll();
             }
         };
-        private Handler mHandler = new Handler();
+        private final Handler mHandler = new Handler();
 
         static final Context getApplicationContextIfAvailable(Context context) {
             final Context ac = context.getApplicationContext();

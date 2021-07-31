@@ -10,19 +10,20 @@ import me.iscle.notiwatch.NotificationAction;
 public class PhoneNotification {
     private static final String TAG = "PhoneNotification";
 
-    // Custom
+    public static final String EXTRA_WEARABLE_EXTENSIONS = "android.wearable.EXTENSIONS";
+
     private String appName;
-    private long chronometerBase;
-    private Bitmap profileBadge;
 
     // StatusBarNotification data
     private String groupKey;
     private int id;
     private String key;
+    private String opPkg;
     private String overrideGroupKey;
     private String packageName;
     private long postTime;
     private String tag;
+    private boolean isAppGroup;
     private boolean isClearable;
     private boolean isGroup;
     private boolean isOngoing;
@@ -186,11 +187,11 @@ public class PhoneNotification {
     }
 
     public long getChronometerBase() {
-        return chronometerBase;
+        return 0;//return chronometerBase;
     }
 
     public Bitmap getProfileBadge() {
-        return profileBadge;
+        return null;//return profileBadge;
     }
 
     public void setLargeIcon(Icon largeIcon) {
